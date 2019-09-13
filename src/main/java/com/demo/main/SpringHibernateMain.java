@@ -27,8 +27,6 @@ public class SpringHibernateMain {
         for(Person p : list){
             System.out.println("Person List::"+p);
         }
-        //close resources
-        context.close();
     }
 }
 

@@ -1,9 +1,10 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:context="http://www.springframework.org/schema/context"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
-   http://www.springframework.org/schema/beans/spring-beans-4.3.xsd">
-<!-- Follow this guide https://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial -->
+   http://www.springframework.org/schema/beans/spring-beans-4.3.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+    <!-- Follow this guide https://www.journaldev.com/3524/spring-hibernate-integration-example-tutorial -->
     <!-- new stuff -->
     <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
           destroy-method="close">
@@ -13,6 +14,12 @@
         <property name="password" value="password"/>
     </bean>
 
+    <context:component-scan base-package="com.demo.dao"/>
+    <tx:annotation-driven/>
+
+    <bean id="transactionManager" class="org.springframework.orm.hibernate5.HibernateTransactionManager">
+        <property name="sessionFactory" ref="hibernate5AnnotatedSessionFactory"/>
+    </bean>
 
     <!-- Hibernate 5 SessionFactory Bean definition -->
     <bean id="hibernate5AnnotatedSessionFactory"
@@ -32,8 +39,7 @@
         </property>
     </bean>
 
-    <bean id="personDAO" class="com.demo.dao.PersonDAOImpl">
-        <property name="sessionFactory" ref="hibernate5AnnotatedSessionFactory"/>
+    <bean id="personDAOImpl" class="com.demo.dao.PersonDAOImpl">
     </bean>
 
 </beans>

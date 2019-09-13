@@ -1,37 +1,31 @@
 package com.demo.dao;
 
-import java.util.List;
-
+import com.demo.model.Person;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.demo.model.Person;
+import java.util.List;
 
 public class PersonDAOImpl implements PersonDAO {
 
+    @Autowired
     private SessionFactory sessionFactory;
 
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
-    }
-
     @Override
+    @Transactional
     public void save(Person p) {
-        Session session = this.sessionFactory.openSession();
-        Transaction tx = session.beginTransaction();
+        Session session = this.sessionFactory.getCurrentSession();
         session.persist(p);
-        tx.commit();
-        session.close();
     }
 
     @SuppressWarnings("unchecked")
     @Override
+    @Transactional
     public List<Person> list() {
-        Session session = this.sessionFactory.openSession();
-        List<Person> personList = session.createQuery("from Person").list();
-        session.close();
-        return personList;
+        Session session = this.sessionFactory.getCurrentSession();
+        return session.createQuery("from Person").list();
     }
 
 }
